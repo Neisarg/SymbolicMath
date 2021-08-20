@@ -15,7 +15,7 @@ class Add(BinaryFunction):
         ls = self.left.evaluate(**kwargs)
         rs = self.right.evaluate(**kwargs)
 
-        if type(ls) in [int, float] and type(rs) in [int, float]:
+        if type(ls) in [int, float, complex] and type(rs) in [int, float, complex]:
             return ls + rs
         
         if isinstance(ls, MathObj) and isinstance(rs, MathObj):
@@ -24,7 +24,7 @@ class Add(BinaryFunction):
         if isinstance(ls, MathObj):
             if rs == 0:
                 return ls
-            if math.isnan(rs) or math.isinf(rs):
+            if cmath.isnan(rs) or cmath.isinf(rs):
                 return rs
 
             return Add(ls, rs)
@@ -32,7 +32,7 @@ class Add(BinaryFunction):
         if ls == 0:
             return rs
 
-        if math.isinf(ls) or math.isnan(ls):
+        if cmath.isinf(ls) or cmath.isnan(ls):
             return ls
 
         return Add(ls, rs)
@@ -50,7 +50,7 @@ class Subtract(BinaryFunction):
         ls = self.left.evaluate(**kwargs)
         rs = self.right.evaluate(**kwargs)
 
-        if type(ls) in [int, float] and type(rs) in [int, float]:
+        if type(ls) in [int, float, complex] and type(rs) in [int, float, complex]:
             return ls - rs
         
         if isinstance(ls, MathObj) and isinstance(rs, MathObj):
@@ -59,17 +59,17 @@ class Subtract(BinaryFunction):
         if isinstance(ls, MathObj):
             if rs == 0:
                 return ls
-            if math.isnan(rs):
-                return math.nan
-            if math.isinf(rs):
-                return -math.inf
+            if cmath.isnan(rs):
+                return cmath.nan
+            if cmath.isinf(rs):
+                return -cmath.inf
 
             return Subtract(ls, rs)
 
         if ls == 0:
             return Negative(rs)
 
-        if math.isinf(ls) or math.isnan(ls):
+        if cmath.isinf(ls) or cmath.isnan(ls):
             return ls
 
         return Subtract(ls, rs)
@@ -95,7 +95,7 @@ class Multiply(BinaryFunction):
     def evaluate(self, **kwargs):
         ls = self.left.evaluate(**kwargs)
         rs = self.right.evaluate(**kwargs)
-        if type(ls) in [int, float] and type(rs) in [int, float]:
+        if type(ls) in [int, float, complex] and type(rs) in [int, float, complex]:
             return ls * rs
         
         if isinstance(ls, MathObj) and isinstance(rs, MathObj):
@@ -106,7 +106,7 @@ class Multiply(BinaryFunction):
                 return 0
             if rs == 1:
                 return ls
-            if math.isnan(rs) or math.isinf(rs):
+            if cmath.isnan(rs) or cmath.isinf(rs):
                 return rs
 
             return Multiply(ls, rs)
@@ -117,7 +117,7 @@ class Multiply(BinaryFunction):
         if ls == 1:
             return rs
 
-        if math.isinf(ls) or math.isnan(ls):
+        if cmath.isinf(ls) or cmath.isnan(ls):
             return ls
 
         return Multiply(ls, rs)
@@ -138,9 +138,9 @@ class Divide(BinaryFunction):
         ls = self.left.evaluate(**kwargs)
         rs = self.right.evaluate(**kwargs)
 
-        if type(ls) in [int, float] and type(rs) in [int, float]:
+        if type(ls) in [int, float, complex] and type(rs) in [int, float, complex]:
             if rs == 0:
-                return math.inf
+                return cmath.inf
             return ls / rs
         
         if isinstance(ls, MathObj) and isinstance(rs, MathObj):
@@ -148,12 +148,12 @@ class Divide(BinaryFunction):
 
         if isinstance(ls, MathObj):
             if rs == 0:
-                return math.inf
+                return cmath.inf
             if rs == 1:
                 return ls
-            if math.isnan(rs): 
-                return math.nan
-            if math.isinf(rs):
+            if cmath.isnan(rs): 
+                return cmath.nan
+            if cmath.isinf(rs):
                 return 0
 
             return Divide(ls, rs)
@@ -161,7 +161,7 @@ class Divide(BinaryFunction):
         if ls == 0:
             return 0
 
-        if math.isinf(ls) or math.isnan(ls):
+        if cmath.isinf(ls) or cmath.isnan(ls):
             return ls
      
         return Divide(ls, rs) 
@@ -192,7 +192,13 @@ class Pow(BinaryFunction):
     def evaluate(self, **kwargs):
         ls = self.left.evaluate(**kwargs)
         rs = self.right.evaluate(**kwargs)
-        if type(ls) in [int, float] and type(rs) in [int, float]:
+        if type(ls) in [int, float, complex] and type(rs) in [int, float, complex]:
+            if ls == 0:
+                if type(rs) in [int, float]:
+                    if rs < 0:
+                        return cmath.nan
+                if type(rs) == complex:
+                    return cmath.nan
             return ls ** rs
         
         if isinstance(ls, MathObj) and isinstance(rs, MathObj):
@@ -203,7 +209,7 @@ class Pow(BinaryFunction):
                 return 1
             if rs == 1:
                 return ls
-            if math.isnan(rs) or math.isinf(rs): 
+            if cmath.isnan(rs) or cmath.isinf(rs): 
                 return rs
 
             return Pow(ls, rs)
@@ -211,7 +217,7 @@ class Pow(BinaryFunction):
         if ls == 0:
             return 0
 
-        if math.isinf(ls) or math.isnan(ls):
+        if cmath.isinf(ls) or cmath.isnan(ls):
             return ls
      
         return Pow(ls, rs) 
@@ -231,7 +237,7 @@ class EQ(BinaryFunction):
     def evaluate(self, **kwargs):
         ls = self.left.evaluate(**kwargs)
         rs = self.right.evaluate(**kwargs)
-        if type(ls) in [int, float] and type(rs) in [int, float]:
+        if type(ls) in [int, float, complex] and type(rs) in [int, float, complex]:
             diff = abs(ls - rs)
             return diff < self.error
         
@@ -239,14 +245,14 @@ class EQ(BinaryFunction):
             return EQ(ls, rs)
 
         if isinstance(ls, MathObj):
-            if math.isnan(rs): 
-                return math.nan
+            if cmath.isnan(rs): 
+                return cmath.nan
 
             return EQ(ls, rs)
 
     
-        if math.isnan(ls):
-            return math.nan 
+        if cmath.isnan(ls):
+            return cmath.nan 
 
         return EQ(ls, rs) 
 
@@ -263,21 +269,21 @@ class GEQ(BinaryFunction):
     def evaluate(self, **kwargs):
         ls = self.left.evaluate(**kwargs)
         rs = self.right.evaluate(**kwargs)
-        if type(ls) in [int, float] and type(rs) in [int, float]:
+        if type(ls) in [int, float, complex] and type(rs) in [int, float, complex]:
             return ls >= rs
         
         if isinstance(ls, MathObj) and isinstance(rs, MathObj):
             return GEQ(ls, rs)
 
         if isinstance(ls, MathObj):
-            if math.isnan(rs): 
-                return math.nan
+            if cmath.isnan(rs): 
+                return cmath.nan
 
             return GEQ(ls, rs)
 
     
-        if math.isnan(ls):
-            return math.nan 
+        if cmath.isnan(ls):
+            return cmath.nan 
 
         return GEQ(ls, rs) 
 
@@ -294,21 +300,21 @@ class LEQ(BinaryFunction):
     def evaluate(self, **kwargs):
         ls = self.left.evaluate(**kwargs)
         rs = self.right.evaluate(**kwargs)
-        if type(ls) in [int, float] and type(rs) in [int, float]:
+        if type(ls) in [int, float, complex] and type(rs) in [int, float, complex]:
             return ls <= rs
         
         if isinstance(ls, MathObj) and isinstance(rs, MathObj):
             return LEQ(ls, rs)
 
         if isinstance(ls, MathObj):
-            if math.isnan(rs): 
-                return math.nan
+            if cmath.isnan(rs): 
+                return cmath.nan
 
             return LEQ(ls, rs)
 
     
-        if math.isnan(ls):
-            return math.nan 
+        if cmath.isnan(ls):
+            return cmath.nan 
 
         return LEQ(ls, rs) 
 
@@ -325,21 +331,21 @@ class LT(BinaryFunction):
     def evaluate(self, **kwargs):
         ls = self.left.evaluate(**kwargs)
         rs = self.right.evaluate(**kwargs)
-        if type(ls) in [int, float] and type(rs) in [int, float]:
+        if type(ls) in [int, float, complex] and type(rs) in [int, float, complex]:
             return ls < rs
         
         if isinstance(ls, MathObj) and isinstance(rs, MathObj):
             return LT(ls, rs)
 
         if isinstance(ls, MathObj):
-            if math.isnan(rs): 
-                return math.nan
+            if cmath.isnan(rs): 
+                return cmath.nan
 
             return LT(ls, rs)
 
     
-        if math.isnan(ls):
-            return math.nan 
+        if cmath.isnan(ls):
+            return cmath.nan 
 
         return LT(ls, rs) 
 
@@ -357,21 +363,21 @@ class GT(BinaryFunction):
     def evaluate(self, **kwargs):
         ls = self.left.evaluate(**kwargs)
         rs = self.right.evaluate(**kwargs)
-        if type(ls) in [int, float] and type(rs) in [int, float]:
+        if type(ls) in [int, float, complex] and type(rs) in [int, float, complex]:
             return ls > rs
         
         if isinstance(ls, MathObj) and isinstance(rs, MathObj):
             return GT(ls, rs)
 
         if isinstance(ls, MathObj):
-            if math.isnan(rs): 
-                return math.nan
+            if cmath.isnan(rs): 
+                return cmath.nan
 
             return GT(ls, rs)
 
     
-        if math.isnan(ls):
-            return math.nan 
+        if cmath.isnan(ls):
+            return cmath.nan 
 
         return GT(ls, rs) 
 
@@ -431,7 +437,7 @@ class exp(UnaryFunction):
     name = "exp"
 
     def __init__(self, arg):
-        super(Exp, self).__init__(arg)
+        super(exp, self).__init__(arg)
 
     def latex(self):
         return "e^{" + self.arg.latex() + "}"
@@ -460,12 +466,15 @@ class log(UnaryFunction):
         if isinstance(arg_v, MathObj):
             return log(arg_v)
 
-        if arg_v > 0:
-            return math.log10(arg_v)
-        elif arg_v < 0:
-            return cmath.log10(arg_v)
+        if type(arg_v) in [int, float]:
+            if arg_v > 0:
+                return math.log10(arg_v)
+            elif arg_v < 0:
+                return cmath.log10(arg_v)
+            else:
+                return cmath.nan
         else:
-            return math.nan
+            return cmath.log10(arg_v)
 
 
 class ln(UnaryFunction):
@@ -481,12 +490,16 @@ class ln(UnaryFunction):
         arg_v = self.arg.evaluate(**kwargs)
         if isinstance(arg_v, MathObj):
             return ln(arg_v)
-        if arg_v > 0:
-            return math.log(arg_v)
-        elif arg_v < 0:
-            return cmath.log(arg_v)
+
+        if type(arg_v) in [int, float]:
+            if arg_v > 0:
+                return math.log(arg_v)
+            elif arg_v < 0:
+                return cmath.log(arg_v)
+            else:
+                return cmath.nan
         else:
-            return math.nan
+            return cmath.log10(arg_v)
 
 
 class log_b(BinaryFunction):
@@ -501,37 +514,42 @@ class log_b(BinaryFunction):
 
     def evaluate(self, **kwargs):
         value, base = self.left.evaluate(**kwargs), self.right.evaluate(**kwargs)
-        if type(value) in [int, float] and type(base) in [int, float]:        
-            if base == 1:
-                return math.nan
-            elif value > 0 and base > 0:
-                return math.log(value, base)
-            elif value == 0 or base == 0:
-                return math.nan
-            else:
-                return cmath.log(arg_v)
+        if type(value) in [int, float]:
+            if value in [cmath.nan, cmath.inf]:
+                return cmath.nan
 
-        if isinstance(value, MathObj) and isinstance(base, MathObj):
+            if value == 0:
+                return cmath.nan
+
+            if value == 1:
+                return 0
+
+            if type(base) in [int, float]:    
+                if base in [0, 1, cmath.nan, cmath.inf]:
+                    return cmath.nan
+                else:
+                    return math.log(value, base)
+            elif type(base) == complex:
+                return cmath.log(value, base)
+            elif isinstance(base, MathObj):
+                return log_b(value, base)
+
+        elif type(value) == complex:
+            if type(base) in [int, float]:    
+                if base in [0, 1, cmath.nan, cmath.inf]:
+                    return cmath.nan
+                else:
+                    return cmath.log(value, base)
+            elif type(base) == complex:
+                return cmath.log(value, base)
+            elif isinstance(base, MathObj):
+                return log_b(value, base)
+
+        elif isinstance(value, MathObj):
+            if type(base) in [int, float]:    
+                if base in [0, 1, cmath.nan, cmath.inf]:
+                    return cmath.nan
             return log_b(value, base)
-
-        if isinstance(value, MathObj):
-            if base in [1, 0]:
-                return math.nan
-        
-            if math.isnan(base) or math.isinf(base): 
-                return math.nan
-
-            return log_b(value, base)
-
-        if value == 0:
-            return math.nan
-
-        if math.isinf(value) or math.isnan(value):
-            return value
-     
-        return log_b(value, base) 
-
-
 
 
 class sqrt(UnaryFunction):
@@ -567,28 +585,35 @@ class root(BinaryFunction):
     def evaluate(self, **kwargs):
         expr = self.left.evaluate(**kwargs)
         r = self.right.evaluate(**kwargs)
-        if type(expr) in [int, float] and type(r) in [int, float]:
+        if type(r) == complex:
+            return cmath.nan
+            
+        if type(expr) in [int, float, complex] and type(r) in [int, float]:
+            if r == 0:
+                return cmath.nan 
+
             return expr**(1.0/r)
+
         
         if isinstance(expr, MathObj) and isinstance(r, MathObj):
             return root(expr, r)
 
         if isinstance(expr, MathObj):
             if r == 0:
-                return math.nan
+                return cmath.nan
             if r == 1:
                 return expr
-            if math.isnan(r): 
-                return math.nan
-            if math.isinf(r):
-                return math.nan
+            if cmath.isnan(r): 
+                return cmath.nan
+            if cmath.isinf(r):
+                return cmath.nan
 
             return root(expr, r)
 
         if expr in [0, 1]:
             return expr
 
-        if math.isinf(expr) or math.isnan(expr):
+        if cmath.isinf(expr) or cmath.isnan(expr):
             return expr
      
         return root(expr, r)

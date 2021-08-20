@@ -15,14 +15,13 @@ greek_names = [
     "Gamma", 
     "theta",
     "Theta",
-    "vartheta" 
+    "vartheta", 
     "delta",
     "Delta",
     "epsilon",
     "varepsilon",
     "zeta",
     "eta",
-    "iota",
     "kappa",
     "lambda",
     "Lambda",
@@ -56,7 +55,6 @@ constants = {
 def get_greek_symbol_list():
     greek_symbols = [ Symbol(n, "\\" + n) for n in greek_names ]
     return greek_symbols
-
 
 def objectify_input(inp):
     out = inp

@@ -23,6 +23,8 @@ def subsitute(exp, ffrom, tto):
                 cls = get_function_by_name(tto)
             elif type(tto) == type:
                 cls = tto 
+            elif isinstance(tto, sm.MathObj):
+                raise Exception("Cannot replace an object for a function") 
             if cls.num_args != node.num_args:
                 raise Exception(
                     "{} has {} args whwers as {} has {} args, they should match".format(ffrom, node.num_args, tto,
@@ -36,9 +38,10 @@ def subsitute(exp, ffrom, tto):
         else:
             if type(tto) == str:
                 return sm.symbol_constructor(tto)
+            elif isinstance(tto, sm.MathObj):
+                return tto
             else:
                 return sm.Number(tto)
-
     else:
         if node.num_args > 0:
             new_args = []

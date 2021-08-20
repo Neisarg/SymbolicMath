@@ -79,7 +79,9 @@ class acsc(UnaryFunction):
         av = self.arg.evaluate(**kwargs)
         if isinstance(av, MathObj):
             return acsc(av)
-            
+        
+        if av == 0:
+            return cmath.asin(cmath.inf)   
         v = cmath.asin(1.0/av)
         if v.imag == 0:
             return v.real
@@ -100,7 +102,10 @@ class asec(UnaryFunction):
         av = self.arg.evaluate(**kwargs)
         if isinstance(av, MathObj):
             return asec(av)
-            
+        
+        if av == 0:
+            return cmath.acos(cmath.inf) 
+
         v = cmath.acos(1.0/av)
         if v.imag == 0:
             return v.real
@@ -121,7 +126,10 @@ class acot(UnaryFunction):
         av = self.arg.evaluate(**kwargs)
         if isinstance(av, MathObj):
             return acotn(av)
-            
+         
+        if av == 0:
+            return cmath.atan(cmath.inf) 
+
         v = cmath.atan(1.0/av)
         if v.imag == 0:
             return v.real
@@ -267,8 +275,11 @@ class csc(UnaryFunction):
         av = self.arg.evaluate(**kwargs)
         if isinstance(av, MathObj):
             return csc(av)
-            
-        v = 1.0/cmath.sin(av)
+        
+        vv = cmath.sin(av)
+        if vv == 0:
+            return cmath.inf
+        v = 1.0/vv
         if v.imag == 0:
             return v.real
         else:
@@ -288,8 +299,12 @@ class sec(UnaryFunction):
         av = self.arg.evaluate(**kwargs)
         if isinstance(av, MathObj):
             return sec(av)
-            
-        v = 1.0/cmath.cos(av)
+        
+        vv = cmath.cos(av)
+        if vv == 0:
+            return cmath.inf
+        v = 1.0/vv
+
         if v.imag == 0:
             return v.real
         else:
@@ -309,8 +324,12 @@ class cot(UnaryFunction):
         av = self.arg.evaluate(**kwargs)
         if isinstance(av, MathObj):
             return cot(av)
-            
-        v = 1.0/cmath.tan(av)
+        
+        vv = cmath.tan(av)
+        if vv == 0:
+            return cmath.inf
+        v = 1.0/vv
+    
         if v.imag == 0:
             return v.real
         else:
