@@ -447,7 +447,7 @@ class exp(UnaryFunction):
         if isinstance(av, MathObj):
             return exp(av)
         
-        return math.exp(av) 
+        return cmath.exp(av) 
 
 
 
@@ -565,6 +565,8 @@ class sqrt(UnaryFunction):
         arg_v = self.arg.evaluate(**kwargs)
         if isinstance(arg_v, MathObj):
             return sqrt(arg_v)
+        if type(arg_v) == complex:
+            return cmath.sqrt(arg_v)
         if arg_v < 0:
             return cmath.sqrt(arg_v)
         else:
@@ -587,10 +589,13 @@ class root(BinaryFunction):
         r = self.right.evaluate(**kwargs)
         if type(r) == complex:
             return cmath.nan
-            
+
         if type(expr) in [int, float, complex] and type(r) in [int, float]:
             if r == 0:
                 return cmath.nan 
+
+            if expr == 0:
+                return 0
 
             return expr**(1.0/r)
 

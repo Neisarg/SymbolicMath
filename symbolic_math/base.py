@@ -163,11 +163,11 @@ class GenericFunction(Function):
 
     def atoms(self, ttype):
         rlist = set()
-        if ttype == Function:
+        if ttype == Function or ttype == GenericFunction:
             rlist.update([self.name])
 
         for arg in self.arg_list:
-            rlist.updated(arg.atoms(ttype))
+            rlist.update(arg.atoms(ttype))
 
         return rlist
 
@@ -208,7 +208,7 @@ class BinaryFunction(Function):
 
     def atoms(self, ttype):
         rlist = set()
-        if ttype == Function:
+        if ttype == Function or ttype == BinaryFunction:
             rlist.update([self.name])
 
         rlist.update(self.left.atoms(ttype))
@@ -235,7 +235,7 @@ class UnaryFunction(Function):
 
     def atoms(self, ttype):
         rlist = set()
-        if ttype == Function:
+        if ttype == Function or ttype == UnaryFunction:
             rlist.update([self.name])
 
         rlist.update(self.arg.atoms(ttype))

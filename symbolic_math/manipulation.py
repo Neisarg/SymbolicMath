@@ -5,11 +5,14 @@ from symbolic_math.utils import *
 
 
 def get_function_by_name(name):
-    if name in sm.functions.__dict__:
-        klass = sm.functions.__dict__[name]
-    elif name in sm.trigonometry.__dict__:
-        klass = sm.trigonometry.__dict__[name]
-    if type(klass) is type:
+    # if name in sm.functions.__dict__:
+    #     klass = sm.functions.__dict__[name]
+    # elif name in sm.trigonometry.__dict__:
+    #     klass = sm.trigonometry.__dict__[name]
+    if name in sm.__dict__:
+        klass = sm.__dict__[name]
+
+    if type(klass) is type and issubclass(klass, sm.Function):
         return klass
 
     raise Exception("func {} not found".format(name))
@@ -51,4 +54,5 @@ def subsitute(exp, ffrom, tto):
             return node
         else:
             return node
+
 
