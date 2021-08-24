@@ -125,7 +125,7 @@ class acot(UnaryFunction):
     def evaluate(self, **kwargs):
         av = self.arg.evaluate(**kwargs)
         if isinstance(av, MathObj):
-            return acotn(av)
+            return acot(av)
          
         if av == 0:
             return cmath.atan(cmath.inf) 
