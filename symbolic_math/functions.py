@@ -192,14 +192,18 @@ class Pow(BinaryFunction):
     def evaluate(self, **kwargs):
         ls = self.left.evaluate(**kwargs)
         rs = self.right.evaluate(**kwargs)
-        if type(ls) in [int, float, complex] and type(rs) in [int, float, complex]:
+        if type(ls) in [int, float] and type(rs) in [int, float, complex]:
             if ls == 0:
                 if type(rs) in [int, float]:
                     if rs < 0:
                         return cmath.nan
                 if type(rs) == complex:
                     return cmath.nan
-            return ls ** rs
+            try:
+                res = ls**rs
+            except:
+                res = cmath.nan
+            return res
         
         if isinstance(ls, MathObj) and isinstance(rs, MathObj):
             return Pow(ls, rs)
