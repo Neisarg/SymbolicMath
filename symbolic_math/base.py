@@ -80,7 +80,7 @@ class MathObj(object):
     def __init__(self):
         pass
 
-    def evaluate(self, *args):
+    def evaluate(self, **kwargs):
         raise NotImplementedError
 
     def latex(self):
@@ -180,7 +180,7 @@ class GenericFunction(Function):
         ss += ")"
         return ss 
 
-    def evaluate(self):
+    def evaluate(self, **kwargs):
         raise NotImplementedError
 
     def __str__(self):

@@ -201,9 +201,10 @@ class Pow(BinaryFunction):
                     return cmath.nan
             try:
                 res = ls**rs
+                return res
             except:
                 res = cmath.nan
-            return res
+                return res
         
         if isinstance(ls, MathObj) and isinstance(rs, MathObj):
             return Pow(ls, rs)
