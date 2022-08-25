@@ -415,7 +415,17 @@ class Integral(BinaryFunction):
         super(Integral, self).__init__(left, right)
 
     def latex(self):
-        raise NotImplementedError
+        if type(self.right) == tuple:
+            int_var, lower, upper = self.right
+            #print(lower, upper, lower.latex(), upper.latex())
+            ll = "\\int_{0}^{1}".format("{" + lower.latex() + "}", 
+                                        "{" + upper.latex() + "}")
+        else:
+            ll = "\\int"
+
+        if isinstance(self.left, BinaryFunction):
+            return ll + " (" + self.left.latex() + ") d" + int_var.latex()
+        return ll + " " + self.left.latex() + "d" + int_var.latex()
 
     def evaluate(self, **kwargs):
         raise NotImplementedError

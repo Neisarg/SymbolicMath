@@ -118,6 +118,10 @@ class Symbol(MathObj):
         return self.name
 
 
+    def __repr__(self):
+        return self.__str__()
+
+
 class Constant(Symbol):
     def __init__(self, name, value, latex_str):
         super(Constant, self).__init__(name, latex_str)
@@ -142,6 +146,9 @@ class Function(MathObj):
 
     def atoms(self, ttype):
         raise NotImplementedError
+
+    def __repr__(self):
+        return self.__str__()
 
 
 

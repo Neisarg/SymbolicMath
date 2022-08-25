@@ -1,6 +1,5 @@
 import symbolic_math as sm
 
-
 def is_number(num):
     if type(num) in [int, float]:
         return True
@@ -12,3 +11,4 @@ def is_string(c):
         return True
     else:
         return False
+

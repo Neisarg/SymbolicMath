@@ -26,5 +26,5 @@ def test_get_func():
 if __name__ == "__main__":
     #test_add()
     #test_add_evaluate()    
-    #test_get_func()
+    #test_get_func() 
     test_subsitute()
