@@ -1,2 +1,2 @@
 # SymbolicMath
-Light Weight Alternative to simply
+Light Weight Alternative to sympy
